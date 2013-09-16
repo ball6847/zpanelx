@@ -36,7 +36,7 @@ class fs_filehandler {
         if (!file_exists($dest)) {
             @copy($src, $dest);
             if (sys_versions::ShowOSPlatformVersion() <> "Windows") {
-                fs_director::SetFileSystemPermissions($dest, 0777);
+                fs_director::SetFileSystemPermissions($dest, 0755);
             }
         }
     }
@@ -50,7 +50,7 @@ class fs_filehandler {
     static function CopyFile($src, $dest) {
         @copy($src, $dest);
         if (sys_versions::ShowOSPlatformVersion() <> "Windows") {
-            fs_director::SetFileSystemPermissions($dest, 0777);
+            fs_director::SetFileSystemPermissions($dest, 0755);
         }
     }
 	
@@ -68,7 +68,7 @@ class fs_filehandler {
 			while($file = readdir($dir_handle)){
 				if($file != "." && $file != ".."){				
 					if(is_dir(fs_director::ConvertSlashes($src."/".$file))){
-						mkdir(fs_director::ConvertSlashes($dest."/".$file), 0777);
+						mkdir(fs_director::ConvertSlashes($dest."/".$file), 0755);
 						self::CopyDirectoryContents($src."/".$file, $dest."/".$file);
 					} else {
 						self::CopyFileSafe(fs_director::ConvertSlashes($src."/".$file), fs_director::ConvertSlashes($dest."/".$file));
@@ -125,7 +125,7 @@ class fs_filehandler {
      * @param string $chmod Permissions mode to use for the new file. (eg. 0777)
      * @param string $string The contents to write into the new file.
      */
-    static function CreateFile($path, $chmod = 0777, $string = "") {
+    static function CreateFile($path, $chmod = 0644, $string = "") {
         if (!is_file($path)) {
             preg_match('`^(.+)/([a-zA-Z0-9]+\.[a-z]+)$`i', $path, $matches);
             $directory = $matches[1];
@@ -179,7 +179,7 @@ class fs_filehandler {
      * @param string $sting The content to update the file with.
      * @return boolean 
      */
-    static function UpdateFile($path, $chmod = 0777, $string = "") {
+    static function UpdateFile($path, $chmod = 0644, $string = "") {
         if (!file_exists($path))
             fs_filehandler::ResetFile($path);
         $fp = @fopen($path, 'w');
@@ -203,7 +203,7 @@ class fs_filehandler {
         } else {
             $new_version = $current_version . fs_filehandler::NewLine() . $content;
         }
-        fs_filehandler::UpdateFile($file, 0777, $new_version);
+        fs_filehandler::UpdateFile($file, 0644, $new_version);
     }
 
 }
